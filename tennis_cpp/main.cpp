@@ -1,84 +1,58 @@
-/* Author: Utkarsh Pathrabe
-*  Question can be found at http://codeforces.com/contest/496/problem/D
-*  Algorithms: Binary Search
-*/
+#include <string>
 
-#include <bits/stdc++.h>
+const std::string tennis_score(int p1Score, int p2Score) {
+    std::string score = "";
+    int tempScore=0;
+    if (p1Score==p2Score)
+    {
+        switch (p1Score)
+        {
+            case 0:
+                    score = "Love-All";
+                break;
+            case 1:
+                    score = "Fifteen-All";
+                break;
+            case 2:
+                    score = "Thirty-All";
+                break;
+            default:
+                    score = "Deuce";
+                break;
 
-using namespace std;
-
-vector <int> s1, s2;
-vector < pair<int, int> > res;
-
-int ans;
-
-bool tty (int pos) {
-    vector<int>::iterator st1 = s1.begin(), st2 = s2.begin(), fd1, fd2;
-    int wf1 = pos, wf2 = pos;
-    int a1 = 0, a2 = 0;
-    bool la = false;
-    while (true) {
-		if ((fd1 == s1.end() - 1 && fd2 == s2.end()) || (fd2 == s2.end() - 1 && fd1 == s1.end())) {
-			if (a1 == a2) {
-				return false;
-			}
-			if (la ^ (a1 > a2)) {
-				return false;
-			}
-			ans = max(a1, a2);
-			return true;
-	    }
-	    fd1 = lower_bound(st1, s1.end(), wf1);
-	    fd2 = lower_bound(st2, s2.end(), wf2);
-		if (fd1 == s1.end() && fd2 == s2.end()) {
-	        break;
-	    }
-	    if (fd1 - s1.begin() < fd2 - s2.begin()) {
-	        a1++;
-	        la = true;
-	        st1 = fd1;
-	        st2 = fd1-s1.begin()+s2.begin();
-	    } else {
-	        a2++;
-	        la = false;
-	        st2 = fd2;
-	        st1 = fd2-s2.begin()+s1.begin();
-		}
-		wf1 = *st1+pos;
-		wf2 = *st2+pos;
-	}
-	return false;
-}
-
-int main(void) {
-    int n, te;
-    cin >> n;
-    s1.clear();
-    s2.clear();
-    res.clear();
-    for (int i = 0; i < n; i++) {
-        cin >> te;
-        if (te == 1) {
-            s1.push_back(1);
-            s2.push_back(0);
-        } else {
-            s1.push_back(0);
-            s2.push_back(1);
         }
     }
-    for (int i = 1; i < n; i++) {
-        s1[i] += s1[i-1];
-        s2[i] += s2[i-1];
-    }    
-    for (int i = 1; i <= n; i++) {
-        if (tty(i)) {
-            res.push_back(make_pair(ans, i));
+    else if (p1Score>=4 || p2Score>=4)
+    {
+        int minusResult = p1Score-p2Score;
+        if (minusResult==1) score ="Advantage player1";
+        else if (minusResult ==-1) score ="Advantage player2";
+        else if (minusResult>=2) score = "Win for player1";
+        else score ="Win for player2";
+    }
+    else
+    {
+        for (int i=1; i<3; i++)
+        {
+            if (i==1) tempScore = p1Score;
+            else { score+="-"; tempScore = p2Score;}
+            switch(tempScore)
+            {
+                case 0:
+                    score+="Love";
+                    break;
+                case 1:
+                    score+="Fifteen";
+                    break;
+                case 2:
+                    score+="Thirty";
+                    break;
+                case 3:
+                    score+="Forty";
+                    break;
+            }
         }
     }
-    sort(res.begin(), res.end());
-    printf("%lu\n", res.size());
-    for (int i = 0; i < res.size(); i++) {
-        printf("%d %d\n", res[i].first, res[i].second);
-    }
-    return 0;
+    return score;
+    
 }
